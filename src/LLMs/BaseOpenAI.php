@@ -164,7 +164,11 @@ class BaseOpenAI extends BaseLLM
         // Includes prompt, completion, and total tokens used.
         $keys = ['completion_tokens', 'prompt_tokens', 'total_tokens'];
         foreach ($subPrompts as $_prompts) {
-            $response = $this->completionWithRetry($this->client, ['prompt' => $_prompts], ...$params);
+            $response = $this->completionWithRetry(
+                $this->client,
+                ['prompt' => sizeof($_prompts) == 1 ? array_shift($_prompts) : $_prompts],
+                ...$params
+            );
             $choices = array_merge($choices, $response['choices']);
             $this->updateTokenUsage($keys, $response, $tokenUsage);
         }
